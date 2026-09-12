@@ -29,16 +29,19 @@ jobs:
           flutter pub add zego_uikit_prebuilt_live_streaming:^3.6.4
           cp -f ../my-live-app/lib/main.dart lib/main.dart
           
-          # Force compileSdkVersion and minSdkVersion directly in build.gradle
+          # Fix SDK versions for both Groovy (.gradle) and Kotlin (.gradle.kts)
           python3 -c "
-          p = 'android/app/build.gradle'
-          with open(p, 'r') as f:
-              content = f.read()
-          content = content.replace('compileSdkVersion flutter.compileSdkVersion', 'compileSdkVersion 34')
-          content = content.replace('minSdkVersion flutter.minSdkVersion', 'minSdkVersion 21')
-          content = content.replace('targetSdkVersion flutter.targetSdkVersion', 'targetSdkVersion 34')
-          with open(p, 'w') as f:
-              f.write(content)
+          import os
+          files = ['android/app/build.gradle', 'android/app/build.gradle.kts']
+          for p in files:
+              if os.path.exists(p):
+                  with open(p, 'r') as f:
+                      content = f.read()
+                  content = content.replace('flutter.compileSdkVersion', '34')
+                  content = content.replace('flutter.minSdkVersion', '21')
+                  content = content.replace('flutter.targetSdkVersion', '34')
+                  with open(p, 'w') as f:
+                      f.write(content)
           "
           
           flutter build apk --release
