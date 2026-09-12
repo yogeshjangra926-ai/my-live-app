@@ -19,7 +19,6 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0'
           channel: 'stable'
 
       - name: Create Base Project & Add Dependencies
@@ -27,7 +26,7 @@ jobs:
           cd ..
           flutter create --org com.mylivestream streamapp
           cd streamapp
-          flutter pub add zego_uikit_prebuilt_live_streaming
+          flutter pub add zego_uikit_prebuilt_live_streaming:^3.6.4
           cp -f ../my-live-app/lib/main.dart lib/main.dart
           flutter build apk --release
           cp build/app/outputs/flutter-apk/app-release.apk ../my-live-app/
@@ -37,5 +36,6 @@ jobs:
         with:
           name: live-stream-app
           path: app-release.apk
+          
           
           
