@@ -26,7 +26,13 @@ jobs:
           cd ..
           flutter create --org com.mylivestream streamapp
           cd streamapp
-          flutter pub add zego_uikit_prebuilt_live_streaming:^3.6.4
+          flutter pub add zego_uikit_prebuilt_live_streaming
+          
+          # Fix minSdk and compileSdk versions for ZegoCloud
+          sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 21/g' android/app/build.gradle || true
+          sed -i 's/compileSdkVersion = flutter.compileSdkVersion/compileSdkVersion = 34/g' android/app/build.gradle || true
+          sed -i 's/targetSdkVersion = flutter.targetSdkVersion/targetSdkVersion = 34/g' android/app/build.gradle || true
+          
           cp -f ../my-live-app/lib/main.dart lib/main.dart
           flutter build apk --release
           cp build/app/outputs/flutter-apk/app-release.apk ../my-live-app/
@@ -36,6 +42,5 @@ jobs:
         with:
           name: live-stream-app
           path: app-release.apk
-          
           
           
