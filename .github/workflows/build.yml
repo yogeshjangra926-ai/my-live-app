@@ -27,23 +27,11 @@ jobs:
           flutter create --org com.mylivestream streamapp
           cd streamapp
           flutter pub add zego_uikit_prebuilt_live_streaming:^3.6.4
-          cp -f ../my-live-app/lib/main.dart lib/main.dart
-          
-          # Fix SDK versions for both Groovy (.gradle) and Kotlin (.gradle.kts)
-          python3 -c "
-          import os
-          files = ['android/app/build.gradle', 'android/app/build.gradle.kts']
-          for p in files:
-              if os.path.exists(p):
-                  with open(p, 'r') as f:
-                      content = f.read()
-                  content = content.replace('flutter.compileSdkVersion', '34')
-                  content = content.replace('flutter.minSdkVersion', '21')
-                  content = content.replace('flutter.targetSdkVersion', '34')
-                  with open(p, 'w') as f:
-                      f.write(content)
-          "
-          
+          cp ../my-live-app/lib/main.dart lib/main.dart
+          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/g' android/app/build.gradle android/app/build.gradle.kts 2>/dev/null || true
+          sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 36/g' android/app/build.gradle android/app/build.gradle.kts 2>/dev/null || true
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/g' android/app/build.gradle android/app/build.gradle.kts 2>/dev/null || true
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle android/app/build.gradle.kts 2>/dev/null || true
           flutter build apk --release
           cp build/app/outputs/flutter-apk/app-release.apk ../my-live-app/
 
